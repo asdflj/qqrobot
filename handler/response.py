@@ -1,6 +1,8 @@
+import re
+
 from django.shortcuts import HttpResponse
 import requests
-from .settings import SERVER
+from .settings import SERVER, COOLQ_ROBOT_ACCESS_TOKEN
 import json
 
 def jsonResponse(response,at=False):
@@ -11,25 +13,27 @@ def jsonResponse(response,at=False):
         content_type='application/json'
     )
 
-def asyncResponse(content,text,mType):
-    params = messageType(content,text,mType)
-    requests.get(url=SERVER + '/send_msg', params=params)
+def asyncResponse(url,params):
+    request(url=url, params=params)
     return returnNone()
+
+def request(url,params):
+    if COOLQ_ROBOT_ACCESS_TOKEN:
+        requests.get(url=url,params=params,headers={'Authorization':'Token '+COOLQ_ROBOT_ACCESS_TOKEN})
+    else:
+        requests.get(url=url, params=params)
 
 def groupResponse(content,text):
     params = messageType(content,text,'group')
-    requests.get(url=SERVER + '/send_msg', params=params)
-    return returnNone()
+    return asyncResponse(url=SERVER + '/send_msg', params=params)
 
 def privateResponse(content,text):
     params = messageType(content,text,'private')
-    requests.get(url=SERVER + '/send_msg', params=params)
-    return returnNone()
+    return asyncResponse(url=SERVER + '/send_msg', params=params)
 
 def discussResponse(content,text):
     params = messageType(content,text,'discuss')
-    requests.get(url=SERVER + '/send_msg', params=params)
-    return returnNone()
+    return asyncResponse(url=SERVER + '/send_msg', params=params)
 
 def messageType(content,text,mType):
     if mType == 'group':

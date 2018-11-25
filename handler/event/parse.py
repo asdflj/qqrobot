@@ -14,9 +14,12 @@ class Parsetext:
         self._content = '\n'.join(lines[1:])
     
     def command(self):
-        if self._command[0] == '/':
-            return self._command[1:]
-        else:
+        try:
+            if self._command[0] == '/':
+                return self._command[1:]
+            else:
+                return None
+        except Exception:
             return None
     
     def args(self):

@@ -279,6 +279,12 @@ class Ping(BaseEventMiddleware):
     def __str__(self):
         return 'ping'
 
+class SavePic(BaseEventMiddleware):
+    def process_request(self,content):
+        obj = Parsetext(content['message'])
+        if obj.command() and content['message_type'] == 'group':
+            util.savePic(content['message'])
+
 class Help(BaseEventMiddleware):
     simple_page_num = 10
     def process_request(self,content):

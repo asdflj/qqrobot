@@ -1,6 +1,7 @@
 import requests
-
-URL = 'http://192.168.1.114:5700'
+from handler.util import IMAGES_DIR, getFonts
+from handler.settings import SERVER
+URL = SERVER
 
 def sendGroupMsg(g,text):
     requests.get(URL+'/send_group_msg',params={
@@ -14,9 +15,8 @@ def sendPrivateMsg(q,text):
         'message':text,
     })
 
-# def returnPicPath():
-#     return IMAGES_DIR +'/'
-#
-# def returnFonts():
-#     return getFonts()
+def returnPicPath():
+    return IMAGES_DIR +'/'
 
+def returnFonts():
+    return getFonts()

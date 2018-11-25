@@ -1,13 +1,14 @@
-COOLQ_ROBOT_SECRET = '123456'
-COOLQ_ROBOT_ACCESS_TOKEN = '1'
+COOLQ_ROBOT_SECRET = None
+COOLQ_ROBOT_ACCESS_TOKEN = None
 CORE_MIDDLEWARE = [
+    'handler.my_middleware.HMAC_Signature',
     'handler.my_middleware.RequestMethod',
     'handler.my_middleware.Transjson',
-    # 'handler.my_middleware.HMAC_Signature',
-    # 'handler.my_middleware.Access_token'
+    'handler.my_middleware.Escape',
 ]
 EVENT_MIDDLEWARE = {
     'message':[
+        'handler.event.middleware.SavePic',
         'handler.event.middleware.Ping',
         'handler.event.middleware.Import_py', #core middleware
         'handler.event.middleware.Bind',
@@ -31,5 +32,5 @@ EVENT_MIDDLEWARE = {
 }
 
 ADMIN = [854865755]
-BLACK_LIST = ['cqp']
-SERVER = 'http://192.168.1.114:5700'
+BLACK_LIST = ['cqp','__init__','os','sys']
+SERVER = 'http://192.168.1.115:5700'

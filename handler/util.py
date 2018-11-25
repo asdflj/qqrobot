@@ -3,14 +3,17 @@ import json
 import re
 import time
 import sys
-
+import requests
 from qqrobot.settings import BASE_DIR
 
 PYTHON_SCRIPT = 'python_script'
 SCRIPT_DIR = 'script'
+IMAGES = 'image'
+FONTS = 'fonts'
+IMAGES_DIR = os.path.join(os.path.join(BASE_DIR,SCRIPT_DIR),IMAGES)
 PYTHON_SCRIPT_DIR = os.path.join(os.path.join(BASE_DIR,SCRIPT_DIR),PYTHON_SCRIPT)
+FONTS_DIR = os.path.join(os.path.join(BASE_DIR,SCRIPT_DIR),FONTS)
 BUFFSIZE = 4096
-
 
 def checkPythonFileExists(fileName):
     return fileExists(os.path.join(PYTHON_SCRIPT_DIR,fileName))
@@ -27,6 +30,11 @@ def reName(source,newName):
     else:
         return False
 
+def translate(text):
+    text = text.replace('&#91;', '[')
+    text = text.replace('&#93;', ']')
+    text = text.replace('&amp;', '&')
+    return text
 
 def dirExists(path):
     if os.path.exists(path) and os.path.isdir(path) :
@@ -47,6 +55,13 @@ def fileExists(path):
     else:
         return False
 
+def importScript(file):
+    # import numpy
+    # import matplotlib
+    # import matplotlib.pyplot
+    # sys.modules['os'] = None
+    return __import__(file)
+
 def fileCreate(path):
     if fileExists(path):
         return False
@@ -64,12 +79,6 @@ def filterFileExtension(files,extendName):
     return L
 
 
-# def filterPythonScript(L):
-#     for file in settings.black_list:
-#         if file in L:
-#             L.pop(L.index(file))
-#     return L
-
 def getPythonScriptFiles():
     return getFiles(PYTHON_SCRIPT)
 
@@ -83,6 +92,19 @@ def extractPic(text):
     for result in results:
         dic[result[0]] = result[1]
     return dic
+
+def fromUrlDownPic(name,url):
+    path = os.path.join(IMAGES_DIR,name)
+    res = requests.get(url)
+    saveFile(path,res.content)
+
+def savePic(text):
+    pics = extractPic(text)
+    for name in pics:
+        fromUrlDownPic(name,pics[name])
+
+def getImagesFiles():
+    return getFiles(IMAGES)
 
 def getFiles(path):
     return os.listdir(path)
@@ -126,6 +148,7 @@ def jsonLoad(path,encoding='utf-8'):
 def jsonDumps(obj):
     return json.dumps(obj)
 
+
 def scriptSpendTime(func,args=()):
     if type(args) != tuple:
         raise '必须是元组'
@@ -134,3 +157,12 @@ def scriptSpendTime(func,args=()):
         func(*args)
         end = time.clock()
         return end - start
+
+def getFonts():
+    fonts = getFiles(FONTS_DIR)
+    dic = {}
+    for font in fonts:
+        _,fileFullName = os.path.split(font)
+        fileName,extendName = os.path.splitext(fileFullName)
+        dic[fileName] = os.path.join(FONTS,font)
+    return dic

@@ -3,7 +3,7 @@ from .response import returnNone,jsonResponse
 import json
 import hmac
 from .settings import COOLQ_ROBOT_SECRET,COOLQ_ROBOT_ACCESS_TOKEN
-
+from handler.util import translate
 class RequestMethod(BaseMiddleWare):
     def process_request(self,request):
         if not request.method == 'POST':
@@ -19,11 +19,6 @@ class Transjson(BaseMiddleWare):
         else:
             return returnNone()
 
-class Access_token(BaseMiddleWare):
-    def process_response(self, request, response):
-        if COOLQ_ROBOT_ACCESS_TOKEN:
-            response['Authorization'] = 'Token '+COOLQ_ROBOT_ACCESS_TOKEN
-
 class HMAC_Signature(BaseMiddleWare):
     def process_request(self,request):
         if request.body:
@@ -35,7 +30,6 @@ class HMAC_Signature(BaseMiddleWare):
                     if sig == received_sig:
                         # 请求确实来自于插件
                         pass
-
                     else:
                         # 假的上报
                         return returnNone()
@@ -44,3 +38,8 @@ class HMAC_Signature(BaseMiddleWare):
                 return returnNone()
         else:
             return returnNone()
+
+class Escape(BaseMiddleWare):
+    def process_request(self,request):
+        if request.body:
+            request.POST['message'] = translate(request.POST['message'])
