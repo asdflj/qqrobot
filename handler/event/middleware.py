@@ -1,13 +1,12 @@
 import importlib
 import os
 from multiprocessing import Process
-from user.models import Creator
 from script import models
 import sys
 from ..middleware import BaseEventMiddleware
 from handler import util,response
 from .parse import Parsetext
-from handler.settings import ADMIN,BLACK_LIST,EVENT_MIDDLEWARE
+from handler.settings import ADMIN,BLACK_LIST,EVENT_MIDDLEWARE,MESSAGE_TYPE
 
 
 class BaseFilter:
@@ -32,7 +31,7 @@ class Import_py(BaseEventMiddleware,BaseFilter):
                     obj.args()[0],
                     os.path.join(util.PYTHON_SCRIPT_DIR, obj.args()[0] + '.py'),
                     obj.content(),
-                    self._user(content['user_id'])
+                    content['user_id'],
                 )
                 return response.jsonResponse({'reply':'创建成功'})
 
@@ -47,18 +46,6 @@ class Import_py(BaseEventMiddleware,BaseFilter):
             scripts[0].creator = creator
             scripts[0].save()
 
-    def _user(self,user_id):
-        users = Creator.objects.filter(user_id=user_id)
-        if len(users) == 0:
-            # 创建用户
-            admin = lambda x:1 if x in ADMIN else 0
-            creator = Creator(user_id=user_id,user_authority=admin(user_id))
-            creator.save()
-            return creator
-        else:
-            creator = users[0]
-            return creator
-            
     def __str__(self):
         return 'import_py'
 
@@ -351,3 +338,35 @@ class Help(BaseEventMiddleware):
 
     def __str__(self):
         return 'help'
+
+class Register(BaseEventMiddleware,BaseFilter):
+    def process_request(self,content):
+        obj = Parsetext(content['message'])
+        if obj.command() == self.__str__() and content['message_type'] == 'group':
+            if len(obj.args()) == 0:
+                return response.jsonResponse({'reply': '缺少参数'})
+            elif len(obj.args()) ==1:
+                return response.jsonResponse({'reply':'缺少文件名'})
+            else:
+                for TYPE in MESSAGE_TYPE:
+                    if MESSAGE_TYPE[TYPE] == obj.args()[0]:
+                        pass
+                else:
+                    return response.jsonResponse({'reply':'注册类型错误'})
+
+
+
+    def __str__(self):
+        return 'Register'
+
+        # def _user(self,user_id):
+        #     users = Creator.objects.filter(user_id=user_id)
+        #     if len(users) == 0:
+        #         # 创建用户
+        #         admin = lambda x:1 if x in ADMIN else 0
+        #         creator = Creator(user_id=user_id,user_authority=admin(user_id))
+        #         creator.save()
+        #         return creator
+        #     else:
+        #         creator = users[0]
+        #         return creator

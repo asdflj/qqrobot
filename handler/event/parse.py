@@ -6,10 +6,7 @@ class Parsetext:
     def _parseContent(self):
         lines = self.text.splitlines()
         L = lines[0].split(' ')
-
         self._command = L[0]
-
-
         self._args = L[1:]
         self._content = '\n'.join(lines[1:])
     
@@ -27,4 +24,3 @@ class Parsetext:
     
     def content(self):
         return self._content
-    

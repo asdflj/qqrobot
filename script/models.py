@@ -7,7 +7,7 @@ from user.models import *
 class PythonScript(models.Model):
     name = models.TextField(verbose_name='脚本名字',unique=True)
     path = models.TextField(verbose_name='脚本路径')
-    creator = models.ForeignKey(Creator)
+    creator = models.CharField(max_length=20)
     create_time = models.DateTimeField(auto_now=True)
 
 class Command(models.Model):

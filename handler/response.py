@@ -46,24 +46,26 @@ def messageType(content,text,mType):
 def returnNone(*args,**kwargs):
     return HttpResponse('')
 
-def command(pattern,fnc):
+def command(pattern,fnc,field):
     class Fn:
-        def __init__(self,pattern,fnc):
+        def __init__(self,pattern,fnc,field):
             self._patternText = pattern
             self._pattern = re.compile(pattern)
             self._func = fnc
+            self._field = field
 
         def getFunction(self):
             return self._func
-
+        def getField(self):
+            return self._field
         def getPattern(self):
             return self._pattern
 
         def getPatternText(self):
             return self._patternText
 
-        def matchPattern(self,text):
-            if self.getPattern().search(text):
+        def matchPattern(self,request):
+            if self.getPattern().search(request[self.getField()]):
                 return True
             else:
                 return False
@@ -71,4 +73,4 @@ def command(pattern,fnc):
         def run(self,request):
             return self.getFunction()(request)
 
-    return Fn(pattern,fnc)
+    return Fn(pattern,fnc,field)

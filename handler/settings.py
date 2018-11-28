@@ -1,5 +1,13 @@
 COOLQ_ROBOT_SECRET = None
 COOLQ_ROBOT_ACCESS_TOKEN = None
+
+MESSAGE_TYPE = {
+    'MESSAGE':'message',
+    'NOTICE':'notice',
+    'REQUEST':'request',
+    'META_EVENT':'meta_event',
+}
+
 CORE_MIDDLEWARE = [
     'handler.my_middleware.HMAC_Signature',
     'handler.my_middleware.RequestMethod',
@@ -7,26 +15,27 @@ CORE_MIDDLEWARE = [
     'handler.my_middleware.Escape',
 ]
 EVENT_MIDDLEWARE = {
-    'message':[
-        'handler.event.middleware.SavePic',
+    MESSAGE_TYPE['MESSAGE']:[
         'handler.event.middleware.Ping',
-        'handler.event.middleware.Import_py', #core middleware
+        'handler.event.middleware.SavePic',
+        'handler.event.middleware.Import_py',
         'handler.event.middleware.Bind',
         'handler.event.middleware.Disable',
         'handler.event.middleware.Enable',
         'handler.event.middleware.List',
         'handler.event.middleware.Print',
-        'handler.event.middleware.RunScript',
         'handler.event.middleware.Eval',
         'handler.event.middleware.Help',
+        # 'handler.event.middleware.Register'#注册第三方中间件
+        'handler.event.middleware.RunScript',
     ],
-    'notice':[
+    MESSAGE_TYPE['NOTICE']:[
 
     ],
-    'request':[
+    MESSAGE_TYPE['REQUEST']:[
 
     ],
-    'meta_event':[
+    MESSAGE_TYPE['META_EVENT']:[
         
     ]
 }
