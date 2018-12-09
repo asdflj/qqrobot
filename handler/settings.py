@@ -17,6 +17,7 @@ CORE_MIDDLEWARE = [
 EVENT_MIDDLEWARE = {
     MESSAGE_TYPE['MESSAGE']:[
         'handler.event.middleware.Ping',
+        'handler.event.middleware.Debug',
         'handler.event.middleware.SavePic',
         'handler.event.middleware.Import_py',
         'handler.event.middleware.Bind',
@@ -26,7 +27,9 @@ EVENT_MIDDLEWARE = {
         'handler.event.middleware.Print',
         'handler.event.middleware.Eval',
         'handler.event.middleware.Help',
-        # 'handler.event.middleware.Register'#注册第三方中间件
+        'handler.event.middleware.Register',#注册第三方中间件
+        'handler.event.middleware.UnRegister',
+        'handler.event.middleware.RunThirdPartyMiddleware',
         'handler.event.middleware.RunScript',
     ],
     MESSAGE_TYPE['NOTICE']:[
@@ -43,3 +46,4 @@ EVENT_MIDDLEWARE = {
 ADMIN = [854865755]
 BLACK_LIST = ['cqp','__init__','os','sys']
 SERVER = 'http://192.168.1.115:5700'
+DEBUG = {'mode':False,'user_id':854865755}

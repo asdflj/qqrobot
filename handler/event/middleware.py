@@ -1,12 +1,16 @@
 import importlib
+import json
 import os
 from multiprocessing import Process
-from script import models
+import traceback
 import sys
+
+import event.models
+import script.models
 from ..middleware import BaseEventMiddleware
 from handler import util,response
 from .parse import Parsetext
-from handler.settings import ADMIN,BLACK_LIST,EVENT_MIDDLEWARE,MESSAGE_TYPE
+from handler.settings import ADMIN,BLACK_LIST,EVENT_MIDDLEWARE,MESSAGE_TYPE,DEBUG
 
 
 class BaseFilter:
@@ -38,9 +42,9 @@ class Import_py(BaseEventMiddleware,BaseFilter):
 
     def _saveScript(self,name,path,text,creator):
         util.saveFile(path,text, 'w')
-        scripts = models.PythonScript.objects.filter(name=name)
+        scripts = script.models.PythonScript.objects.filter(name=name)
         if len(scripts) == 0:
-            pys = models.PythonScript(name=name, path=path, creator=creator)
+            pys = script.models.PythonScript(name=name, path=path, creator=creator)
             pys.save()
         else:
             scripts[0].creator = creator
@@ -64,9 +68,9 @@ class Bind(BaseEventMiddleware,BaseFilter):
     def _bind(self,inside,external,user_id):
         if self._checkScriptExists(inside):
             scripts = self._script(inside)
-            commands = models.Command.objects.filter(external_name=external)
+            commands = script.models.Command.objects.filter(external_name=external)
             if len(commands) == 0:
-                cmd = models.Command(inside_name=scripts[0],external_name=external,last_bind_user_id=user_id)
+                cmd = script.models.Command(inside_name=scripts[0],external_name=external,last_bind_user_id=user_id)
                 cmd.save()
             else:
                 commands[0].inside_name = scripts[0]
@@ -78,7 +82,7 @@ class Bind(BaseEventMiddleware,BaseFilter):
             return response.jsonResponse({'reply': '绑定失败,请重新创建文件'})
 
     def _script(self,name):
-        return models.PythonScript.objects.filter(name=name)
+        return script.models.PythonScript.objects.filter(name=name)
 
     def _checkScriptExists(self,fileName):
         scripts = self._script(fileName)
@@ -106,7 +110,7 @@ class Disable(BaseEventMiddleware,BaseFilter):
             else:
                 return response.jsonResponse({'reply': '禁用失败,未找到该命令'})
     def _disable(self,external):
-        commands = models.Command.objects.filter(external_name=external)
+        commands = script.models.Command.objects.filter(external_name=external)
         if len(commands) == 0:
             return False
         else:
@@ -131,7 +135,7 @@ class Enable(BaseEventMiddleware,BaseFilter):
                 return response.jsonResponse({'reply': '启用失败,未找到该命令'})
 
     def _enable(self,external):
-        commands = models.Command.objects.filter(external_name=external)
+        commands = script.models.Command.objects.filter(external_name=external)
         if len(commands) == 0:
             return False
         else:
@@ -168,7 +172,7 @@ class List(BaseEventMiddleware):
         return L1
 
     def _userCommands(self):
-        return list(models.Command.objects.values_list('external_name',flat=True))
+        return list(script.models.Command.objects.values_list('external_name',flat=True))
 
     def _middlewareCommands(self, middleware):
         L = []
@@ -206,7 +210,7 @@ class Print(BaseEventMiddleware,BaseFilter):
                 return response.jsonResponse({'reply': '输出失败,未找到该文件'})
 
     def _print(self,external):
-        commands = models.Command.objects.filter(external_name=external)
+        commands = script.models.Command.objects.filter(external_name=external)
         if len(commands) == 0:
             return False
         else:
@@ -251,7 +255,7 @@ class RunScript(BaseEventMiddleware):
         obj.main(content['group_id'], content['user_id'], args)
 
     def _commandExists(self,external):
-        cmds =models.Command.objects.filter(external_name=external)
+        cmds =script.models.Command.objects.filter(external_name=external)
         if len(cmds) == 0:
             return None
         else:
@@ -303,7 +307,7 @@ class Help(BaseEventMiddleware):
                     return response.jsonResponse({'reply': '没有找到该帮助'})
 
     def _query(self,command):
-        helps =models.Help.objects.filter(command=command)
+        helps =script.models.Help.objects.filter(command=command)
         if len(helps) == 0:
             return None
         else:
@@ -317,7 +321,7 @@ class Help(BaseEventMiddleware):
             )
         }
     def _helpList(self,start,end):
-        return list(models.Help.objects.values_list('command',flat=True).all()[start:end])
+        return list(script.models.Help.objects.values_list('command',flat=True).all()[start:end])
 
     def _save(self,command,explain):
         helps = models.Help.objects.filter(command=command)
@@ -339,34 +343,179 @@ class Help(BaseEventMiddleware):
     def __str__(self):
         return 'help'
 
-class Register(BaseEventMiddleware,BaseFilter):
+class Debug(BaseEventMiddleware):
+    def process_request(self,content):
+        obj = Parsetext(content['message'])
+        if obj.command() == self.__str__() and content['message_type'] == 'group':
+            if len(obj.args()) == 0:
+                self.mode = self._debug()
+            else:
+                if obj.args()[0] == 'true':
+                    self.mode = self._debug(True)
+                elif obj.args()[0] == 'false':
+                    self.mode = self._debug(False)
+                elif obj.args()[0] == 'meta':
+                    self.mode = 'meta'
+                else:
+                    self.mode = self._debug()
+            global DEBUG
+            DEBUG['mode'] = self.mode
+            DEBUG['user_id'] = content['user_id']
+            return response.privateResponse(content,'DEBUG已开启' if DEBUG['mode'] else 'DEBUG已关闭')
+        if DEBUG['mode'] == True:
+            content['user_id'] = DEBUG['user_id']
+            return response.privateResponse(content,'用户ID:%s\n消息:%s\n'%(content['user_id'],content['message']))
+        elif DEBUG['mode'] == 'meta':
+            content['user_id'] = DEBUG['user_id']
+            return response.privateResponse(content,json.dumps(content))
+
+    def _debug(self,swich=None):
+        if swich == None:
+            return False if DEBUG['mode'] else True
+        elif swich == True:
+            return True
+        elif swich == False:
+            return False
+        else:
+            return False
+
+    def process_exception(self,exception):
+        return response.privateResponse(exception)
+
+    def __str__(self):
+        return 'debug'
+
+class Register(BaseEventMiddleware):
     def process_request(self,content):
         obj = Parsetext(content['message'])
         if obj.command() == self.__str__() and content['message_type'] == 'group':
             if len(obj.args()) == 0:
                 return response.jsonResponse({'reply': '缺少参数'})
-            elif len(obj.args()) ==1:
+            elif len(obj.args()) == 1:
                 return response.jsonResponse({'reply':'缺少文件名'})
-            else:
-                for TYPE in MESSAGE_TYPE:
-                    if MESSAGE_TYPE[TYPE] == obj.args()[0]:
-                        pass
+            elif len(obj.args()) == 2:
+                scripts = script.models.PythonScript.objects.filter(name=obj.args()[1])
+                if len(scripts) == 0:
+                    return response.jsonResponse({'reply':'文件不存在'})
                 else:
-                    return response.jsonResponse({'reply':'注册类型错误'})
+                    if obj.args()[0] == MESSAGE_TYPE['MESSAGE']:
+                        self._register(event.models.Message,scripts[0],content['user_id'])
+                    elif obj.args()[0] == MESSAGE_TYPE['NOTICE']:
+                        self._register(event.models.Notice, scripts[0], content['user_id'])
+                    elif obj.args()[0] == MESSAGE_TYPE['REQUEST']:
+                        self._register(event.models.Request, scripts[0], content['user_id'])
+                    elif obj.args()[0] == MESSAGE_TYPE['META_EVENT']:
+                        self._register(event.models.Meta_event, scripts[0], content['user_id'])
+                    else:
+                        return response.jsonResponse({'reply':'注册类型错误'})
+                    return response.jsonResponse({'reply':'注册成功'})
 
-
+    def _register(self,myModel,script,userId):
+        objects = myModel.objects.filter(script=script)
+        if len(objects) != 0:
+            objects[0].delete()
+        obj = myModel(script=script,register_id=userId)
+        obj.save()
 
     def __str__(self):
-        return 'Register'
+        return 'register'
 
-        # def _user(self,user_id):
-        #     users = Creator.objects.filter(user_id=user_id)
-        #     if len(users) == 0:
-        #         # 创建用户
-        #         admin = lambda x:1 if x in ADMIN else 0
-        #         creator = Creator(user_id=user_id,user_authority=admin(user_id))
-        #         creator.save()
-        #         return creator
-        #     else:
-        #         creator = users[0]
-        #         return creator
+class UnRegister(BaseEventMiddleware,BaseFilter):
+    def process_request(self,content):
+        obj = Parsetext(content['message'])
+        if obj.command() == self.__str__() and content['message_type'] == 'group':
+            if len(obj.args()) == 0:
+                return response.jsonResponse({'reply': '缺少参数'})
+            elif len(obj.args()) == 1:
+                return response.jsonResponse({'reply':'缺少文件名'})
+            elif len(obj.args()) == 2:
+                scripts = script.models.PythonScript.objects.filter(name=obj.args()[1])
+                if len(scripts) == 0:
+                    return response.jsonResponse({'reply':'文件不存在'})
+                else:
+                    if obj.args()[0] == MESSAGE_TYPE['MESSAGE']:
+                        return self._response(self._unRegister(event.models.Message,scripts[0]))
+                    elif obj.args()[0] == MESSAGE_TYPE['NOTICE']:
+                        return self._response(self._unRegister(event.models.Notice, scripts[0]))
+                    elif obj.args()[0] == MESSAGE_TYPE['REQUEST']:
+                        return self._response(self._unRegister(event.models.Request, scripts[0]))
+                    elif obj.args()[0] == MESSAGE_TYPE['META_EVENT']:
+                        return self._response(self._unRegister(event.models.Meta_event, scripts[0]))
+                    else:
+                        return response.jsonResponse({'reply':'注册类型错误'})
+
+    def _response(self,result):
+        if result:
+            return response.jsonResponse({'reply': '反注册成功'})
+        else:
+            return response.jsonResponse({'reply': '未注册该中间件'})
+
+    def _unRegister(self,myModel,script):
+        objects = myModel.objects.filter(script=script)
+        if len(objects) != 0:
+            objects[0].delete()
+            return True
+        return False
+
+    def __str__(self):
+        return 'unregister'
+
+class RunThirdPartyMiddleware(BaseEventMiddleware, BaseFilter):
+    def __init__(self,get_response):
+        super(RunThirdPartyMiddleware, self).__init__(get_response)
+        self.model = {
+            MESSAGE_TYPE['MESSAGE']:event.models.Message,
+            MESSAGE_TYPE['NOTICE']: event.models.Notice,
+            MESSAGE_TYPE['REQUEST']: event.models.Request,
+            MESSAGE_TYPE['META_EVENT']: event.models.Meta_event,
+        }
+        self.myModels = {}
+
+    def process_request(self, content):
+        for post_type in MESSAGE_TYPE:
+            if MESSAGE_TYPE[post_type] == content['post_type']:
+                MyModels = self.model[MESSAGE_TYPE[post_type]].objects.filter(is_ban=False)
+                for myModel in MyModels:
+                    path = util.filterFileExtension([myModel.script.path],'.py')[0]
+                    obj = importlib.import_module(path)
+                    obj = obj.Main(response)
+                    self.myModels[myModel] = obj
+                    try:
+                        result = self._run_process_request(content,obj)
+                        if result:
+                            return result
+                    except Exception as e:
+                        self._error(content,myModel,traceback.format_exc())
+
+    def process_response(self,content,response):
+        for myModel in self.myModels:
+            try:
+                result = self._run_process_response(content,response,self.myModels[myModel])
+                if result:
+                    return result
+            except Exception:
+                self._error(content, myModel)
+
+    def _error(self,content,myModel,error):
+        myModel.error_num += 1
+        if myModel.error_num >= 5:
+            myModel.is_ban = True
+            content['user_id'] = myModel.register_id
+            response.privateResponse(content, '错误次数过多,禁用该中间件,中间件名字:%s\n最后错误信息:\n%s' %(
+                myModel.script.name,
+                error
+            ))
+        myModel.save()
+
+    def _run_process_response(self,content,response,obj):
+        try:
+            return obj.process_response(content,response)
+        except Exception as e:
+            return obj.process_exception(traceback.format_exc())
+
+    def _run_process_request(self,content,obj):
+        try:
+            return obj.process_request(content)
+        except Exception as e:
+            return obj.process_exception(traceback.format_exc())
+

@@ -2,6 +2,6 @@ from ..response import command
 from .function import *
 
 eventPatterns = [
-    # command(r'^/rua$',rua,'message')
+    command(r'add',joinGroup,'sub_type'),
 ]
 

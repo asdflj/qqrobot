@@ -2,7 +2,7 @@ from .middleware import BaseMiddleWare
 from .response import returnNone,jsonResponse
 import json
 import hmac
-from .settings import COOLQ_ROBOT_SECRET,COOLQ_ROBOT_ACCESS_TOKEN
+from .settings import COOLQ_ROBOT_SECRET,COOLQ_ROBOT_ACCESS_TOKEN,MESSAGE_TYPE
 from handler.util import translate
 class RequestMethod(BaseMiddleWare):
     def process_request(self,request):
@@ -41,5 +41,5 @@ class HMAC_Signature(BaseMiddleWare):
 
 class Escape(BaseMiddleWare):
     def process_request(self,request):
-        if request.body:
-            request.POST['message'] = translate(request.POST['message'])
+        if request.body and request.POST.get(MESSAGE_TYPE['MESSAGE'],None):
+            request.POST[MESSAGE_TYPE['MESSAGE']] = translate(request.POST[MESSAGE_TYPE['MESSAGE']])

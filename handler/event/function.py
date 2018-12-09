@@ -1,4 +1,4 @@
-from ..response import groupResponse
+from ..response import groupResponse,jsonResponse
 
-def rua(content):
-    return groupResponse(content,'rua')
+def joinGroup(content):
+    return jsonResponse({'approve':True})

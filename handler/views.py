@@ -24,7 +24,6 @@ def exec(request,messageType):
 
 def main(request):
     # 匹配事件
-    print(request.POST)
     if request.POST['post_type'] == MESSAGE_TYPE['MESSAGE']:
         return exec(request,MESSAGE_TYPE['MESSAGE'])
     elif request.POST['post_type'] == 'notice':

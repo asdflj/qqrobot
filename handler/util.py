@@ -166,3 +166,5 @@ def getFonts():
         fileName,extendName = os.path.splitext(fileFullName)
         dic[fileName] = os.path.join(FONTS,font)
     return dic
+
+sys.path.append(PYTHON_SCRIPT_DIR)

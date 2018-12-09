@@ -20,9 +20,8 @@ class Middleware:
             else:
                 return view_response
         except Exception as e:
-            print(traceback.print_exc())
             for obj in self.initClass(response):
-                result = obj.process_exception(e)
+                result = obj.process_exception(traceback.format_exc())
                 if result:
                     return result
 
@@ -73,10 +72,10 @@ class BaseEventMiddleware(BaseMiddleWare):
     def process_request(self,content):
         pass
 
-    def process_exception(self,Exception):
-        pass
+    def process_exception(self,exception):
+        raise Exception(exception)
         
-    def process_response(self,context,response):
+    def process_response(self,content,response):
         pass
 
     def __str__(self):
