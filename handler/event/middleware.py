@@ -275,6 +275,7 @@ class SavePic(BaseEventMiddleware):
         obj = Parsetext(content['message'])
         if obj.command() and content['message_type'] == 'group':
             util.savePic(content['message'])
+            content['message'] = util.replacePic(content['message'])
 
 class Help(BaseEventMiddleware):
     simple_page_num = 10

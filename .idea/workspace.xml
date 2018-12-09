@@ -16,12 +16,13 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="middleware.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="middleware.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/handler/event/middleware.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="104">
-              <caret line="4" column="14" lean-forward="false" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+            <state relative-caret-position="390">
+              <caret line="20" column="24" lean-forward="true" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
               <folding>
+                <element signature="e#0#16#0" expanded="true" />
                 <element signature="e#359#468#0" expanded="false" />
                 <element signature="e#535#1790#0" expanded="false" />
                 <element signature="e#1840#3577#0" expanded="false" />
@@ -32,14 +33,26 @@
                 <element signature="e#8369#8903#0" expanded="false" />
                 <element signature="e#8947#9768#0" expanded="false" />
                 <element signature="e#9807#10073#0" expanded="false" />
-                <element signature="e#10115#10303#0" expanded="false" />
-                <element signature="e#10342#12932#0" expanded="false" />
-                <element signature="e#12430#12676#0" expanded="false" />
-                <element signature="e#12714#12886#0" expanded="false" />
-                <element signature="e#12972#14541#0" expanded="false" />
-                <element signature="e#14584#16301#0" expanded="false" />
-                <element signature="e#16357#18185#0" expanded="false" />
-                <element signature="e#18255#20607#0" expanded="false" />
+                <element signature="e#10115#10372#0" expanded="false" />
+                <element signature="e#10411#13001#0" expanded="false" />
+                <element signature="e#12499#12745#0" expanded="false" />
+                <element signature="e#12783#12955#0" expanded="false" />
+                <element signature="e#13041#14610#0" expanded="false" />
+                <element signature="e#14653#16370#0" expanded="false" />
+                <element signature="e#16426#18254#0" expanded="false" />
+                <element signature="e#18324#20676#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="util.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/handler/util.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="309">
+              <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+              <folding>
+                <element signature="e#671#881#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -49,7 +62,7 @@
         <entry file="file://$PROJECT_DIR$/handler/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="104">
-              <caret line="4" column="47" lean-forward="true" selection-start-line="4" selection-start-column="47" selection-end-line="4" selection-end-column="47" />
+              <caret line="4" column="47" lean-forward="false" selection-start-line="4" selection-start-column="47" selection-end-line="4" selection-end-column="47" />
               <folding>
                 <element signature="e#0#48#0" expanded="true" />
                 <element signature="e#295#388#0" expanded="false" />
@@ -60,23 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="event_patterns.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/handler/event/event_patterns.py">
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/qqrobot/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="104">
-              <caret line="4" column="41" lean-forward="true" selection-start-line="4" selection-start-column="41" selection-end-line="4" selection-end-column="41" />
-              <folding>
-                <element signature="e#0#30#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="function.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/handler/event/function.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="78">
-              <caret line="3" column="20" lean-forward="true" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="20" />
+            <state relative-caret-position="537">
+              <caret line="125" column="4" lean-forward="false" selection-start-line="125" selection-start-column="4" selection-end-line="125" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -119,7 +120,6 @@
         <option value="$PROJECT_DIR$/user1/admin.py" />
         <option value="$PROJECT_DIR$/qqrobot/urls.py" />
         <option value="$PROJECT_DIR$/handler/urls.py" />
-        <option value="$PROJECT_DIR$/qqrobot/settings.py" />
         <option value="$PROJECT_DIR$/handler/event_patterns.py" />
         <option value="$PROJECT_DIR$/script/admin.py" />
         <option value="$PROJECT_DIR$/script/python_script/cqp.py" />
@@ -131,14 +131,15 @@
         <option value="$PROJECT_DIR$/handler/my_middleware.py" />
         <option value="$PROJECT_DIR$/event/admin.py" />
         <option value="$PROJECT_DIR$/event/models.py" />
-        <option value="$PROJECT_DIR$/handler/util.py" />
         <option value="$PROJECT_DIR$/handler/settings.py" />
         <option value="$PROJECT_DIR$/script/python_script/asd.py" />
         <option value="$PROJECT_DIR$/handler/middleware.py" />
-        <option value="$PROJECT_DIR$/handler/event/middleware.py" />
         <option value="$PROJECT_DIR$/handler/event/event_patterns.py" />
         <option value="$PROJECT_DIR$/handler/event/function.py" />
         <option value="$PROJECT_DIR$/handler/views.py" />
+        <option value="$PROJECT_DIR$/qqrobot/settings.py" />
+        <option value="$PROJECT_DIR$/handler/event/middleware.py" />
+        <option value="$PROJECT_DIR$/handler/util.py" />
       </list>
     </option>
   </component>
@@ -180,6 +181,38 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="qqrobot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="qqrobot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="qqrobot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="script" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="qqrobot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="qqrobot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="script" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="python_script" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -500,9 +533,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/admin/models.py" />
-    <entry file="file://$PROJECT_DIR$/groups/admin.py" />
-    <entry file="file://$PROJECT_DIR$/groups/views.py" />
     <entry file="file://$PROJECT_DIR$/groups/models.py" />
     <entry file="file://$PROJECT_DIR$/users/admin.py" />
     <entry file="file://$PROJECT_DIR$/users/views.py" />
@@ -536,14 +566,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
           <caret line="131" column="8" lean-forward="true" selection-start-line="131" selection-start-column="8" selection-end-line="131" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/qqrobot/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="881">
-          <caret line="52" column="5" lean-forward="true" selection-start-line="52" selection-start-column="5" selection-end-line="52" selection-end-column="5" />
           <folding />
         </state>
       </provider>
@@ -669,19 +691,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/handler/my_middleware.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="44" column="43" lean-forward="false" selection-start-line="44" selection-start-column="43" selection-end-line="44" selection-end-column="43" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="e#264#371#0" expanded="false" />
-            <element signature="e#410#663#0" expanded="false" />
-            <element signature="e#707#1397#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/handler/response.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="407">
@@ -720,17 +729,7 @@
         <state relative-caret-position="104">
           <caret line="4" column="25" lean-forward="false" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
           <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/handler/util.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="168" column="0" lean-forward="true" selection-start-line="168" selection-start-column="0" selection-end-line="168" selection-end-column="0" />
-          <folding>
-            <element signature="e#671#881#0" expanded="false" />
+            <element signature="e#0#32#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -777,31 +776,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/handler/settings.py">
+    <entry file="file://$PROJECT_DIR$/script/python_script/asd.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="31" column="57" lean-forward="false" selection-start-line="31" selection-start-column="34" selection-end-line="31" selection-end-column="57" />
+        <state relative-caret-position="130">
+          <caret line="5" column="15" lean-forward="true" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/handler/middleware.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="589">
+        <state relative-caret-position="563">
           <caret line="76" column="8" lean-forward="true" selection-start-line="76" selection-start-column="8" selection-end-line="76" selection-end-column="8" />
           <folding>
             <element signature="e#0#16#0" expanded="true" />
+            <element signature="e#1443#2103#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/script/python_script/asd.py">
+    <entry file="file://$PROJECT_DIR$/handler/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="5" column="15" lean-forward="true" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
-          <folding>
-            <element signature="e#0#50#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="442">
+          <caret line="17" column="29" lean-forward="true" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -823,24 +821,43 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/handler/views.py">
+    <entry file="file://$PROJECT_DIR$/handler/my_middleware.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="4" column="47" lean-forward="true" selection-start-line="4" selection-start-column="47" selection-end-line="4" selection-end-column="47" />
+        <state relative-caret-position="390">
+          <caret line="44" column="43" lean-forward="false" selection-start-line="44" selection-start-column="43" selection-end-line="44" selection-end-column="43" />
           <folding>
-            <element signature="e#0#48#0" expanded="true" />
-            <element signature="e#295#388#0" expanded="false" />
-            <element signature="e#425#675#0" expanded="false" />
-            <element signature="e#700#1157#0" expanded="false" />
+            <element signature="e#0#38#0" expanded="false" />
+            <element signature="e#264#371#0" expanded="false" />
+            <element signature="e#410#663#0" expanded="false" />
+            <element signature="e#707#1397#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/script/image/984AA3916D0225E7172C9D2EDBBFD57A.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/script/python_script/rua.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="13" lean-forward="false" selection-start-line="0" selection-start-column="13" selection-end-line="0" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/script/image/1.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/handler/event/middleware.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="4" column="14" lean-forward="false" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+        <state relative-caret-position="390">
+          <caret line="20" column="24" lean-forward="true" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
           <folding>
+            <element signature="e#0#16#0" expanded="true" />
             <element signature="e#359#468#0" expanded="false" />
             <element signature="e#535#1790#0" expanded="false" />
             <element signature="e#1840#3577#0" expanded="false" />
@@ -851,14 +868,45 @@
             <element signature="e#8369#8903#0" expanded="false" />
             <element signature="e#8947#9768#0" expanded="false" />
             <element signature="e#9807#10073#0" expanded="false" />
-            <element signature="e#10115#10303#0" expanded="false" />
-            <element signature="e#10342#12932#0" expanded="false" />
-            <element signature="e#12430#12676#0" expanded="false" />
-            <element signature="e#12714#12886#0" expanded="false" />
-            <element signature="e#12972#14541#0" expanded="false" />
-            <element signature="e#14584#16301#0" expanded="false" />
-            <element signature="e#16357#18185#0" expanded="false" />
-            <element signature="e#18255#20607#0" expanded="false" />
+            <element signature="e#10115#10372#0" expanded="false" />
+            <element signature="e#10411#13001#0" expanded="false" />
+            <element signature="e#12499#12745#0" expanded="false" />
+            <element signature="e#12783#12955#0" expanded="false" />
+            <element signature="e#13041#14610#0" expanded="false" />
+            <element signature="e#14653#16370#0" expanded="false" />
+            <element signature="e#16426#18254#0" expanded="false" />
+            <element signature="e#18324#20676#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/qqrobot/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="537">
+          <caret line="125" column="4" lean-forward="false" selection-start-line="125" selection-start-column="4" selection-end-line="125" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/handler/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="4" column="47" lean-forward="false" selection-start-line="4" selection-start-column="47" selection-end-line="4" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#48#0" expanded="true" />
+            <element signature="e#295#388#0" expanded="false" />
+            <element signature="e#425#675#0" expanded="false" />
+            <element signature="e#700#1157#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/handler/util.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding>
+            <element signature="e#671#881#0" expanded="false" />
           </folding>
         </state>
       </provider>

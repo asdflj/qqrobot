@@ -98,6 +98,10 @@ def fromUrlDownPic(name,url):
     res = requests.get(url)
     saveFile(path,res.content)
 
+def replacePic(text):
+    replace = '[CQ:image,file=file:///%s\g<file>,url=\g<url>]'%IMAGES_DIR
+    return re.sub(r'\[CQ:image,file=(?P<file>.*?),url=(?P<url>.*?)\]',replace, text)
+
 def savePic(text):
     pics = extractPic(text)
     for name in pics:
