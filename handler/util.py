@@ -4,13 +4,14 @@ import re
 import time
 import sys
 import requests
-from qqrobot.settings import BASE_DIR
-
+# from qqrobot.settings import BASE_DIR
+BASE_DIR = ''
 PYTHON_SCRIPT = 'python_script'
 SCRIPT_DIR = 'script'
 IMAGES = 'image'
 FONTS = 'fonts'
-IMAGES_DIR = os.path.join(os.path.join(BASE_DIR,SCRIPT_DIR),IMAGES)
+# IMAGES_DIR = os.path.join(os.path.join(BASE_DIR,SCRIPT_DIR),IMAGES)
+IMAGES_DIR = os.readlink(os.path.join(os.path.join(BASE_DIR,SCRIPT_DIR),IMAGES))
 PYTHON_SCRIPT_DIR = os.path.join(os.path.join(BASE_DIR,SCRIPT_DIR),PYTHON_SCRIPT)
 FONTS_DIR = os.path.join(os.path.join(BASE_DIR,SCRIPT_DIR),FONTS)
 BUFFSIZE = 4096
@@ -171,4 +172,3 @@ def getFonts():
         dic[fileName] = os.path.join(FONTS,font)
     return dic
 
-sys.path.append(PYTHON_SCRIPT_DIR)

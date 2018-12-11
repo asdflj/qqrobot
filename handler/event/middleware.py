@@ -10,8 +10,10 @@ import script.models
 from ..middleware import BaseEventMiddleware
 from handler import util,response
 from .parse import Parsetext
-from handler.settings import ADMIN,BLACK_LIST,EVENT_MIDDLEWARE,MESSAGE_TYPE,DEBUG
+from handler.settings import ADMIN,BLACK_LIST,EVENT_MIDDLEWARE,MESSAGE_TYPE,DEBUG,VERTION
+import qqrobot.settings
 
+sys.path.append(os.path.join(qqrobot.settings.BASE_DIR,util.PYTHON_SCRIPT_DIR))
 
 class BaseFilter:
     def filter(self,text,L):
@@ -33,7 +35,7 @@ class Import_py(BaseEventMiddleware,BaseFilter):
             else:
                 self._saveScript(
                     obj.args()[0],
-                    os.path.join(util.PYTHON_SCRIPT_DIR, obj.args()[0] + '.py'),
+                    os.path.join(os.path.join(qqrobot.settings.BASE_DIR,util.PYTHON_SCRIPT_DIR), obj.args()[0] + '.py'),
                     obj.content(),
                     content['user_id'],
                 )
@@ -41,14 +43,18 @@ class Import_py(BaseEventMiddleware,BaseFilter):
 
 
     def _saveScript(self,name,path,text,creator):
-        util.saveFile(path,text, 'w')
-        scripts = script.models.PythonScript.objects.filter(name=name)
-        if len(scripts) == 0:
-            pys = script.models.PythonScript(name=name, path=path, creator=creator)
-            pys.save()
-        else:
-            scripts[0].creator = creator
-            scripts[0].save()
+        try:
+            util.saveFile(path,text, 'w')
+            scripts = script.models.PythonScript.objects.filter(name=name)
+            if len(scripts) == 0:
+                pys = script.models.PythonScript(name=name, path=path, creator=creator)
+                pys.save()
+            else:
+                scripts[0].creator = creator
+                scripts[0].save()
+        except Exception as e:
+            traceback.print_exc()
+            raise 'a'
 
     def __str__(self):
         return 'import_py'
@@ -168,8 +174,24 @@ class List(BaseEventMiddleware):
     def _allCommands(self):
         L1 = self._middlewareCommands(EVENT_MIDDLEWARE['message'])
         L2 = self._userCommands()
+        L3 = self._thirdMiddleware()
         L1.extend(L2)
+        L1.extend(L3)
         return L1
+
+    def _thirdMiddleware(self):
+        L = []
+        moduleName = []
+        objects = event.models.Message.objects.all()
+        for i in objects:
+            L.append(i.script.path)
+        L = util.filterFileExtension(L, '.py')
+        for file in L:
+            obj = importlib.import_module(file)
+            result = obj.__str__()
+            if result:
+                moduleName.append(result)
+        return moduleName
 
     def _userCommands(self):
         return list(script.models.Command.objects.values_list('external_name',flat=True))
@@ -250,7 +272,6 @@ class RunScript(BaseEventMiddleware):
                 process.start()
 
     def _runScript(self,path,content,args):
-        sys.path.append(util.PYTHON_SCRIPT_DIR)
         obj = importlib.import_module(path)
         obj.main(content['group_id'], content['user_id'], args)
 
@@ -275,7 +296,7 @@ class SavePic(BaseEventMiddleware):
         obj = Parsetext(content['message'])
         if obj.command() and content['message_type'] == 'group':
             util.savePic(content['message'])
-            content['message'] = util.replacePic(content['message'])
+            # content['message'] = util.replacePic(content['message'])
 
 class Help(BaseEventMiddleware):
     simple_page_num = 10
@@ -364,11 +385,13 @@ class Debug(BaseEventMiddleware):
             DEBUG['user_id'] = content['user_id']
             return response.privateResponse(content,'DEBUG已开启' if DEBUG['mode'] else 'DEBUG已关闭')
         if DEBUG['mode'] == True:
+            string = '用户ID:%s\n消息:%s\n'%(content['user_id'],content['message'])
             content['user_id'] = DEBUG['user_id']
-            return response.privateResponse(content,'用户ID:%s\n消息:%s\n'%(content['user_id'],content['message']))
+            return response.privateResponse(content,string)
         elif DEBUG['mode'] == 'meta':
+            original = content.copy()
             content['user_id'] = DEBUG['user_id']
-            return response.privateResponse(content,json.dumps(content))
+            return response.privateResponse(content,json.dumps(original))
 
     def _debug(self,swich=None):
         if swich == None:
@@ -470,7 +493,7 @@ class RunThirdPartyMiddleware(BaseEventMiddleware, BaseFilter):
             MESSAGE_TYPE['REQUEST']: event.models.Request,
             MESSAGE_TYPE['META_EVENT']: event.models.Meta_event,
         }
-        self.myModels = {}
+        self.myModels = []
 
     def process_request(self, content):
         for post_type in MESSAGE_TYPE:
@@ -480,7 +503,7 @@ class RunThirdPartyMiddleware(BaseEventMiddleware, BaseFilter):
                     path = util.filterFileExtension([myModel.script.path],'.py')[0]
                     obj = importlib.import_module(path)
                     obj = obj.Main(response)
-                    self.myModels[myModel] = obj
+                    self.myModels.append((myModel,obj))
                     try:
                         result = self._run_process_request(content,obj)
                         if result:
@@ -489,13 +512,13 @@ class RunThirdPartyMiddleware(BaseEventMiddleware, BaseFilter):
                         self._error(content,myModel,traceback.format_exc())
 
     def process_response(self,content,response):
-        for myModel in self.myModels:
+        for i in self.myModels[::-1]:
             try:
-                result = self._run_process_response(content,response,self.myModels[myModel])
+                result = self._run_process_response(content,response,i[1])
                 if result:
                     return result
-            except Exception:
-                self._error(content, myModel)
+            except Exception as e:
+                self._error(content, i[0],traceback.format_exc())
 
     def _error(self,content,myModel,error):
         myModel.error_num += 1
@@ -520,3 +543,11 @@ class RunThirdPartyMiddleware(BaseEventMiddleware, BaseFilter):
         except Exception as e:
             return obj.process_exception(traceback.format_exc())
 
+class Vertion(BaseEventMiddleware):
+    def process_request(self,content):
+        obj = Parsetext(content['message'])
+        if obj.command() == self.__str__() and content['message_type'] == 'group':
+            return response.jsonResponse({'reply':"Vertion:%s %s"%(VERTION[0],VERTION[1])})
+
+    def __str__(self):
+        return 'vertion'
