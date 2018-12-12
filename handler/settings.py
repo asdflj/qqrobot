@@ -18,7 +18,7 @@ EVENT_MIDDLEWARE = {
     MESSAGE_TYPE['MESSAGE']:[
         'handler.event.middleware.Debug',
         'handler.event.middleware.Ping',
-        'handler.event.middleware.Vertion',
+        'handler.event.middleware.Version',
         'handler.event.middleware.SavePic',
         'handler.event.middleware.Import_py',
         'handler.event.middleware.Bind',
@@ -48,4 +48,4 @@ ADMIN = [854865755]
 BLACK_LIST = ['cqp','__init__','os','sys']
 SERVER = 'http://192.168.1.103:5700'
 DEBUG = {'mode':False,'user_id':854865755}
-VERTION = ('alpha',0.2)
+VERSION = ('alpha',0.2)

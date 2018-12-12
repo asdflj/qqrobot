@@ -10,7 +10,7 @@ import script.models
 from ..middleware import BaseEventMiddleware
 from handler import util,response
 from .parse import Parsetext
-from handler.settings import ADMIN,BLACK_LIST,EVENT_MIDDLEWARE,MESSAGE_TYPE,DEBUG,VERTION
+from handler.settings import ADMIN,BLACK_LIST,EVENT_MIDDLEWARE,MESSAGE_TYPE,DEBUG,VERSION
 import qqrobot.settings
 
 sys.path.append(os.path.join(qqrobot.settings.BASE_DIR,util.PYTHON_SCRIPT_DIR))
@@ -543,11 +543,11 @@ class RunThirdPartyMiddleware(BaseEventMiddleware, BaseFilter):
         except Exception as e:
             return obj.process_exception(traceback.format_exc())
 
-class Vertion(BaseEventMiddleware):
+class Version(BaseEventMiddleware):
     def process_request(self,content):
         obj = Parsetext(content['message'])
         if obj.command() == self.__str__() and content['message_type'] == 'group':
-            return response.jsonResponse({'reply':"Vertion:%s %s"%(VERTION[0],VERTION[1])})
+            return response.jsonResponse({'reply':"Version:%s %s"%(VERSION[0],VERSION[1])})
 
     def __str__(self):
-        return 'vertion'
+        return 'version'
