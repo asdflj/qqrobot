@@ -236,10 +236,10 @@ class Print(BaseEventMiddleware,BaseFilter):
         if len(commands) == 0:
             return False
         else:
-            path = commands[0].inside_name.path
+            # path = commands[0].inside_name.path
             name = commands[0].inside_name.name
             if util.checkPythonFileExists(name+'.py'):
-                return util.readPythonScriptFile(path)
+                return util.readPythonScriptFile(name+'.py')
             else:
                 return False
 
