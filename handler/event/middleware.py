@@ -82,6 +82,7 @@ class Bind(BaseEventMiddleware,BaseFilter):
                 commands[0].inside_name = scripts[0]
                 commands[0].external_name = external
                 commands[0].last_bind_user_id = user_id
+                commands[0].is_ban = False
                 commands[0].save()
             return response.jsonResponse({'reply': '绑定成功'})
         else:
@@ -194,7 +195,7 @@ class List(BaseEventMiddleware):
         return moduleName
 
     def _userCommands(self):
-        return list(script.models.Command.objects.values_list('external_name',flat=True))
+        return list(script.models.Command.objects.filter(is_ban=False).values_list('external_name',flat=True))
 
     def _middlewareCommands(self, middleware):
         L = []
@@ -232,7 +233,7 @@ class Print(BaseEventMiddleware,BaseFilter):
                 return response.jsonResponse({'reply': '输出失败,未找到该文件'})
 
     def _print(self,external):
-        commands = script.models.Command.objects.filter(external_name=external)
+        commands = script.models.Command.objects.filter(external_name=external,is_ban=False)
         if len(commands) == 0:
             return False
         else:
@@ -268,15 +269,16 @@ class RunScript(BaseEventMiddleware):
             path = self._commandExists(obj.command())
             if path:
                 path = util.filterFileExtension([path],'.py')[0]
-                process = Process(target=self._runScript,args=(path,content,' '.join(obj.args())))
-                process.start()
+                # process = Process(target=self._runScript,args=(path,content,' '.join(obj.args())))
+                # process.start()
+                self._runScript(path,content,' '.join(obj.args()))
 
     def _runScript(self,path,content,args):
         obj = importlib.import_module(path)
         obj.main(content['group_id'], content['user_id'], args)
 
     def _commandExists(self,external):
-        cmds =script.models.Command.objects.filter(external_name=external)
+        cmds =script.models.Command.objects.filter(external_name=external,is_ban=False)
         if len(cmds) == 0:
             return None
         else:
@@ -367,6 +369,7 @@ class Help(BaseEventMiddleware):
 
 class Debug(BaseEventMiddleware):
     def process_request(self,content):
+        self.content = content
         obj = Parsetext(content['message'])
         if obj.command() == self.__str__() and content['message_type'] == 'group':
             if len(obj.args()) == 0:
@@ -387,11 +390,11 @@ class Debug(BaseEventMiddleware):
         if DEBUG['mode'] == True:
             string = '用户ID:%s\n消息:%s\n'%(content['user_id'],content['message'])
             content['user_id'] = DEBUG['user_id']
-            return response.privateResponse(content,string)
+            response.privateResponse(content,string)
         elif DEBUG['mode'] == 'meta':
             original = content.copy()
             content['user_id'] = DEBUG['user_id']
-            return response.privateResponse(content,json.dumps(original))
+            response.privateResponse(content,json.dumps(original))
 
     def _debug(self,swich=None):
         if swich == None:
@@ -404,7 +407,8 @@ class Debug(BaseEventMiddleware):
             return False
 
     def process_exception(self,exception):
-        return response.privateResponse(exception)
+        if DEBUG['mode']:
+            return response.privateResponse(self.content,'错误信息:\n%s'%exception)
 
     def __str__(self):
         return 'debug'

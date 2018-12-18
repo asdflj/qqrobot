@@ -6,8 +6,8 @@ class Middleware:
         self.middleware = middleware
 
     def execute(self,response):
+        objects = self.initClass(response)
         try:
-            objects = self.initClass(response)
             for obj in objects:
                 result = obj.process_request(self.getRequest())
                 if result:
@@ -19,8 +19,8 @@ class Middleware:
                     return result
             else:
                 return view_response
-        except Exception as e:
-            for obj in self.initClass(response):
+        except BaseException as e:
+            for obj in objects:
                 result = obj.process_exception(traceback.format_exc())
                 if result:
                     return result
